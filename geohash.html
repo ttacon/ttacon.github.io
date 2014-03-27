@@ -21,8 +21,35 @@
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
-      // This example adds a red rectangle to a map.
+
+      // trivial little function to get us a dictionary of the url parameters
+      function getURLParams() {
+        var queryString = decodeURIComponent(window.location.search);
+        if (queryString.length < 2) {
+          return {}
+        }
+
+        queryString = queryString.substring(1);
+        var vals = queryString.split("&");
+		var params = {};
+        for (i = 0; i < vals.length; i++ ){
+          objs = vals[i].split("=");
+		  params[objs[0]] = objs[1];
+        }
+        return params;
+      }
+
+      function encodeGeohashes(geohashes) {
+        
+
+      }
+
+      // build the map!
       function initialize() {
+		params = getURLParams();
+
+		encoded = encodeGeohashes(params["geohashes"]);
+        
         var map = new google.maps.Map(document.getElementById('map-canvas'), {
           zoom: 5,
             center: new google.maps.LatLng(33.678176, -116.242568),
