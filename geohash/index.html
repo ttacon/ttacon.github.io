@@ -39,9 +39,48 @@
         return params;
       }
 
-      function encodeGeohashes(geohashes) {
-        
+      function refinePosition(vals, movement) {
+		var newPosition = (vals[0] + vals[1]) / 2;
+        if (movement > 0) {
+          vals[0] = newPosition;
+        } else {
+          vals[1] = newPosition;
+        }
+      }
 
+      function splitAndTrim(toSplit, delim) {
+        //TODO(ttacon)
+        var geohashes = toSplit.split(delim).map(function (a) {return a.trim()});
+        return geohashes;
+      }
+
+      function encodeGeohashes(geohashString) {
+        if (!geohashString) {
+          return {};
+        }
+
+        console.log(geohashString);
+        var geohashToBound = {}
+            geohashes = splitAndTrim(geohashString, ',');
+        for (i=0; i < geohashes.length; i++) {
+          var isEven = true,
+              lat = [-90, 90],
+              lng = [-180, 180],
+              latErr = 90.0,
+              lngErr = 180.0,
+              c = "",
+              cd = 0,
+              geohash = geohashes[i];
+          for (j=0; j < geohash.length; j++) {
+            //TODO(ttacon)
+          }
+          geohashToBound[geohash] = {
+            'lat': lat,
+            'lng': lng
+          };
+        }
+
+        return geohashToBound;
       }
 
       // build the map!
@@ -87,7 +126,7 @@
   </head>
   <body>
 	<div class="geohash-form">
-      <form method="get" action="/geohash">
+      <form method="get" action="">
         <input type="text" name="geohashes" length="1000" placeholder="enter a comma separated list of geohashes here">
 	    <input type="submit" value="Let's do it!">
       <form>
