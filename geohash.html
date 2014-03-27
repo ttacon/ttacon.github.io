@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Rectangles</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+
+	  .geohash-form {
+		display: inline-block;
+      }
+
+      input[name="geohashes"] {
+		width: 1000px;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+      // This example adds a red rectangle to a map.
+      function initialize() {
+        var map = new google.maps.Map(document.getElementById('map-canvas'), {
+          zoom: 5,
+            center: new google.maps.LatLng(33.678176, -116.242568),
+            mapTypeId: google.maps.MapTypeId.TERRAIN
+          });
+
+		  /*
+          var {$key}_infowindow = 
+            new google.maps.InfoWindow({
+              content: '{$key}'
+              //position: new google.maps.LatLng()
+            });*/
+
+          /*google.maps.event.addListener(
+            {$key}_rectangle, 
+            'click', 
+            function() {
+              {$key}_infowindow.open(map,{$key}_rectangle);
+            });*/
+          var rectangle = new google.maps.Rectangle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            bounds: new google.maps.LatLngBounds(
+              new google.maps.LatLng(33.671068, -116.25128),
+              new google.maps.LatLng(33.685282, -116.233942)
+            )
+          });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+	<div class="geohash-form">
+      <form method="get" action="/geohashes">
+        <input type="text" name="geohashes" length="1000" placeholder="enter a comma separated list of geohashes here">
+	    <input type="submit" value="Let's do it!">
+      <form>
+    </div>
+    <div id="map-canvas"></div>
+	<!-- This example is taken from https://developers.google.com/maps/documentation/javascript/examples/rectangle-simple -->
+	<!-- The only difference is that the boxes are generate from given geohashes -->
+  </body>
+</html>
+
+{/template}
