@@ -87,7 +87,7 @@
   </head>
   <body>
 	<div class="geohash-form">
-      <form method="get" action="/geohashes">
+      <form method="get" action="/geohash">
         <input type="text" name="geohashes" length="1000" placeholder="enter a comma separated list of geohashes here">
 	    <input type="submit" value="Let's do it!">
       <form>
