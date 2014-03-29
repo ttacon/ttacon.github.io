@@ -63,7 +63,6 @@
           return {};
         }
 
-        console.log(geohashString);
         var geohashToBound = {}
             geohashes = splitAndTrim(geohashString, ',');
         for (i=0; i < geohashes.length; i++) {
@@ -75,10 +74,11 @@
               c = "",
               cd = 0,
               geohash = geohashes[i];
+
           for (j=0; j < geohash.length; j++) {
             var c = geohash[j],
                 cd = base32.indexOf(c);
-            console.log(cd);
+
             for (k=0; k < 5; k++) {
               if (isEven) {
                 lngErr /= 2;
@@ -90,6 +90,7 @@
               isEven = !isEven;
             }
           }
+
           geohashToBound[geohash] = {
             'lat': lat,
             'lng': lng
@@ -101,45 +102,53 @@
 
       // build the map!
       function initialize() {
-		params = getURLParams();
-
+        params = getURLParams();
 		encoded = encodeGeohashes(params["geohashes"]);
         
         var map = new google.maps.Map(document.getElementById('map-canvas'), {
-          zoom: 5,
+            zoom: 3,
             center: new google.maps.LatLng(33.678176, -116.242568),
             mapTypeId: google.maps.MapTypeId.TERRAIN
           });
 
-		  /*
-          var {$key}_infowindow = 
-            new google.maps.InfoWindow({
-              content: '{$key}'
-              //position: new google.maps.LatLng()
-            });*/
+        var infoWindows = {},
+            rectangles = {};
+        for (var geo in encoded) {
 
-          /*google.maps.event.addListener(
-            {$key}_rectangle, 
-            'click', 
-            function() {
-              {$key}_infowindow.open(map,{$key}_rectangle);
-            });*/
-          for (var geo in encoded) {
-            var rectangle = new google.maps.Rectangle({
-              strokeColor: '#FF0000',
-              strokeOpacity: 0.8,
-              strokeWeight: 2,
-              fillColor: '#FF0000',
-              fillOpacity: 0.35,
-              map: map,
-              bounds: new google.maps.LatLngBounds(
-                new google.maps.LatLng(encoded[geo].lat[0], encoded[geo].lng[0]),
-                new google.maps.LatLng(encoded[geo].lat[1], encoded[geo].lng[1])
+          infoWindows[geo] = 
+            new google.maps.InfoWindow({
+              content: geo,
+              position: new google.maps.LatLng(
+                (encoded[geo].lat[1] - encoded[geo].lat[0])/2 + encoded[geo].lat[0], 
+                (encoded[geo].lng[1] - encoded[geo].lng[0])/2 + encoded[geo].lng[0]
               )
             });
-          }
+
+          rectangles[geo] = new google.maps.Rectangle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            bounds: new google.maps.LatLngBounds(
+              new google.maps.LatLng(encoded[geo].lat[0], encoded[geo].lng[0]),
+              new google.maps.LatLng(encoded[geo].lat[1], encoded[geo].lng[1])
+            )
+          });
+
+          google.maps.event.addListener(
+            rectangles[geo], 
+            'click', 
+            function() {
+              infoWindows[geo].open(map);
+            }
+          );
         }
-        google.maps.event.addDomListener(window, 'load', initialize);
+        console.log(infoWindows);
+        console.log(rectangles);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
   <body>
